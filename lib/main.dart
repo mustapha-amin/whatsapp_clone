@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:whatsapp_clone/screens/calls.dart';
-import 'package:whatsapp_clone/screens/chats.dart';
+import 'package:whatsapp_clone/screens/chats_list.dart';
 import 'package:whatsapp_clone/screens/settings.dart';
 import 'package:whatsapp_clone/screens/status.dart';
 
@@ -141,14 +141,13 @@ class _HomeState extends State<Home> {
           },
           body: const TabBarView(
             children: [
-              ChatScreen(),
+              ChatList(),
               Status(),
               CallsScreen(),
             ],
           ),
         ),
       ),
-      
     );
   }
 }
