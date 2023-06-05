@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:whatsapp_clone/screens/calls.dart';
 import 'package:whatsapp_clone/screens/chats.dart';
@@ -19,14 +22,20 @@ void main() {
   ));
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: DefaultTabController(
+        animationDuration: Duration(milliseconds: 300),
         length: 3,
         child: NestedScrollView(
           headerSliverBuilder: (context, value) {
@@ -139,6 +148,7 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
+      
     );
   }
 }
