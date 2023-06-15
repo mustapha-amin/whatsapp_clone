@@ -27,7 +27,7 @@ class _ChatsState extends State<Chats> {
       copy += message[i];
     }
 
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       messages
           .add(Message(status: status.incoming, body: copy.capitaliseFirst));
       streamController.sink.add(messages);
@@ -69,62 +69,84 @@ class _ChatsState extends State<Chats> {
           stream: streamController.stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return Align(
-                      alignment: snapshot.data![index].status == status.incoming
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MessageTile(message: snapshot.data![index]),
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return Align(
+                          alignment:
+                              snapshot.data![index].status == status.incoming
+                                  ? Alignment.centerLeft
+                                  : Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: MessageTile(message: snapshot.data![index]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.white,
                       ),
-                    );
-                  });
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1,
+                      maxLines: 5,
+                      controller: messageController,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        fillColor: Colors.grey[700],
+                        filled: true,
+                        hintText: "Type a message",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        hintStyle:
+                            TextStyle(fontSize: 14.sp, color: Colors.white),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            messageController.text.isEmpty
+                                ? null
+                                : {
+                                    sendMessage(messageController.text),
+                                    messageController.clear()
+                                  };
+                          },
+                          icon: const Icon(
+                            Icons.send,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                      textAlignVertical: TextAlignVertical.center,
+                    ),
+                  )
+                ],
+              );
             } else {
               return const Center(
                 child: Text("No message yet"),
               );
             }
           }),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: SizedBox(
-          height: 7.h,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 85.w,
-                child: TextField(
-                  textAlign: TextAlign.justify,
-                  maxLines: 3,
-                  controller: messageController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(10),
-                    hintText: "Message",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 12.w,
-                child: IconButton(
-                  color: Colors.green,
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    sendMessage(messageController.text);
-                    messageController.clear();
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
